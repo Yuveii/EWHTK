@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ethical Web Hacking Toolkit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Futura', sans-serif; }
+    body { background: #0e0e0e; color: white; overflow-x: hidden; }
+    #intro {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(135deg, #121212, #1a1a1a);
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; z-index: 1000;
+      padding: 2rem; animation: fadeIn 1s ease-in-out;
+    }
+    #intro h1 {
+      font-size: 3rem; margin-bottom: 1rem;
+      animation: slideUp 1s ease-out forwards;
+    }
+    #intro p {
+      font-size: 1.2rem; max-width: 800px;
+      animation: fadeIn 2s ease-in-out 1s forwards; opacity: 0;
+    }
+    #skip-btn {
+      position: absolute; bottom: 20px; right: 20px;
+      background: #ff3860; border: none; color: white;
+      padding: 0.8rem 1.2rem; border-radius: 10px;
+      font-size: 1rem; cursor: pointer;
+    }
+    #skip-btn:hover { background: #ff1744; }
+
+    @keyframes slideUp {
+      0% { transform: translateY(30px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    .fade-out {
+      animation: fadeOut 1s ease forwards;
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    #main {
+      display: none; padding: 2rem; overflow-y: auto; height: 100vh;
+    }
+    h2 { margin-top: 2rem; margin-bottom: 1rem; }
+
+    .section {
+      margin-bottom: 2rem;
+      background: #1e1e1e;
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      background: #0e0e0e;
+      color: #00ffcc;
+      border: 1px solid #555;
+      padding: 1rem;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-top: 0.5rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #0056b3; }
+
+    .output {
+      margin-top: 1rem;
+      background: #121212;
+      padding: 1rem;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="intro">
+    <h1>Welcome to the Ethical Web Hacking Toolkit</h1>
+    <p>
+      Ethical hacking is about understanding how hackers operate so we can better protect our digital systems.
+      This toolkit introduces the core techniques used in ethical hacking and helps developers secure their code
+      against potential threats. Stay smart, stay safe.
+    </p>
+    <button id="skip-btn" onclick="endIntro()">Skip</button>
+  </div>
+
+  <main id="main">
+    <h2>🛠 JavaScript Vulnerability Analyzer</h2>
+    <div class="section">
+      <textarea id="js-input" placeholder="Paste your JavaScript code here..."></textarea>
+      <button onclick="analyzeCode()">Analyze & Secure</button>
+      <div class="output" id="vuln-output"></div>
+      <div class="output" id="secure-output"></div>
+    </div>
+
+    <h2>🔍 XSS Scanner</h2>
+    <div class="section">
+      <textarea id="xss-input" placeholder="Paste HTML or JS content here..."></textarea>
+      <button onclick="scanXSS()">Scan for XSS</button>
+      <div class="output" id="xss-output"></div>
+    </div>
+
+    <h2>🐛 SQL Injection Tester</h2>
+    <div class="section">
+      <input type="text" id="sql-input" placeholder="Enter SQL query or input..." />
+      <button onclick="scanSQL()">Check SQL Injection</button>
+      <div class="output" id="sql-output"></div>
+    </div>
+
+    <h2>🛡️ CSP Evaluator</h2>
+    <div class="section">
+      <input type="text" id="csp-input" placeholder="Paste Content-Security-Policy header..."/>
+      <button onclick="checkCSP()">Evaluate CSP</button>
+      <div class="output" id="csp-output"></div>
+    </div>
+
+    <h2>🍪 Cookie Security Checker</h2>
+    <div class="section">
+      <textarea id="cookie-input" placeholder="Paste Set-Cookie headers here..."></textarea>
+      <button onclick="checkCookies()">Check Cookie Security</button>
+      <div class="output" id="cookie-output"></div>
+    </div>
+
+    <h2>🔐 HTTPS Enforcement Analyzer</h2>
+    <div class="section">
+      <textarea id="link-input" placeholder="Paste website HTML or links..."></textarea>
+      <button onclick="checkHTTPS()">Scan for Non-HTTPS</button>
+      <div class="output" id="https-output"></div>
+    </div>
+
+    <h2>🧠 Password Strength Meter</h2>
+    <div class="section">
+      <input type="text" id="password-input" placeholder="Enter password to check..." />
+      <button onclick="checkPassword()">Check Strength</button>
+      <div class="output" id="password-output"></div>
+    </div>
+  </main>
+
+  <script>
+    function endIntro() {
+      const intro = document.getElementById('intro');
+      const main = document.getElementById('main');
+      intro.classList.add('fade-out');
+      setTimeout(() => {
+        intro.style.display = 'none';
+        main.style.display = 'block';
+      }, 1000);
+    }
+
+    function analyzeCode() {
+      const input = document.getElementById('js-input').value;
+      const vulnOutput = document.getElementById('vuln-output');
+      const secureOutput = document.getElementById('secure-output');
+      let score = 100;
+      let suggestions = [];
+
+      if (input.includes('eval(')) {
+        score -= 30; suggestions.push('Avoid using eval().');
+      }
+      if (input.includes('innerHTML')) {
+        score -= 20; suggestions.push('Avoid innerHTML. Use safer methods.');
+      }
+      if (input.includes('document.write')) {
+        score -= 10; suggestions.push('Avoid document.write.');
+      }
+      if (input.includes('localStorage')) {
+        score -= 10; suggestions.push('Avoid storing sensitive data in localStorage.');
+      }
+
+      vulnOutput.innerText = `Vulnerability Score: ${score}/100\n${suggestions.length ? "Issues:\n- " + suggestions.join("\n- ") : "No major issues."}`;
+      let secureCode = input
+        .replace(/eval\((.*?)\)/g, '// eval removed')
+        .replace(/innerHTML/g, 'textContent')
+        .replace(/document.write/g, '// document.write avoided')
+        .replace(/localStorage/g, 'sessionStorage');
+      secureOutput.innerText = `Secure Suggestion:\n${secureCode}`;
+    }
+
+    function scanXSS() {
+      const input = document.getElementById('xss-input').value;
+      const output = document.getElementById('xss-output');
+      const risky = /(on\w+=|<script|innerHTML|document\.cookie)/gi;
+      const matches = input.match(risky);
+      output.innerText = matches ? `⚠️ Potential XSS risks:\n- ${[...new Set(matches)].join('\n- ')}` : "✅ No XSS patterns detected.";
+    }
+
+    function scanSQL() {
+      const input = document.getElementById('sql-input').value.toLowerCase();
+      const output = document.getElementById('sql-output');
+      const keywords = ['select ', 'union ', ' or ', '--', ';--', '\' or', '" or'];
+      const found = keywords.filter(k => input.includes(k));
+      output.innerText = found.length ? `⚠️ Suspicious SQL patterns:\n- ${found.join('\n- ')}` : "✅ Input appears safe.";
+    }
+
+    function checkCSP() {
+      const input = document.getElementById('csp-input').value;
+      const output = document.getElementById('csp-output');
+      if (input.includes("default-src") && input.includes("'self'")) {
+        output.innerText = "✅ Good: CSP includes default-src with self.";
+      } else {
+        output.innerText = "⚠️ Weak CSP detected. Use default-src 'self'; at minimum.";
+      }
+    }
+
+    function checkCookies() {
+      const input = document.getElementById('cookie-input').value;
+      const output = document.getElementById('cookie-output');
+      const cookies = input.split('\n');
+      const results = cookies.map(cookie => {
+        let result = `Cookie: ${cookie.trim()}`;
+        if (!/HttpOnly/i.test(cookie)) result += "\n- ⚠️ Missing HttpOnly";
+        if (!/Secure/i.test(cookie)) result += "\n- ⚠️ Missing Secure";
+        if (!/SameSite=/i.test(cookie)) result += "\n- ⚠️ Missing SameSite";
+        return result;
+      });
+      output.innerText = results.join('\n\n');
+    }
+
+    function checkHTTPS() {
+      const input = document.getElementById('link-input').value;
+      const output = document.getElementById('https-output');
+      const httpLinks = input.match(/http:\/\/[^\s"'>]+/g);
+      output.innerText = httpLinks ? `⚠️ Insecure links found:\n- ${httpLinks.join('\n- ')}` : "✅ All links appear secure (HTTPS).";
+    }
+
+    function checkPassword() {
+      const pw = document.getElementById('password-input').value;
+      const output = document.getElementById('password-output');
+      let score = 0;
+      if (pw.length >= 8) score++;
+      if (/[A-Z]/.test(pw)) score++;
+      if (/[a-z]/.test(pw)) score++;
+      if (/[0-9]/.test(pw)) score++;
+      if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+      const labels = ['Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'];
+      output.innerText = `🧠 Password Strength: ${labels[score - 1] || 'Too Short'}`;
+    }
+  </script>
+</body>
+</html>
